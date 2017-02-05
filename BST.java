@@ -19,4 +19,48 @@ public class BST {
 	   else if (v2<root.val) return LCA(root.left,v1,v2);
 	   return root;
    }
+   
+   public void morrisTraversal(TreeNode root){
+	   /**
+	    *  Morris Algorithm: 
+	    * current = root
+	    * while current is not null:
+	    *    if (current.left == null):
+	    *       printout current;
+	    *       current = current.right;
+	    *    else:
+	    *       find the rightmost node in the left subtree of the current, which is the predecessor of current
+	    *       if (pre.right == null):
+	    *           pre.right = current;
+	    *           current = current.left;
+	    *       else:
+	    *           pre.right = null;
+	    *           printout current;
+	    *           current = current.right;   
+	    */
+	   
+	   TreeNode cur = root;
+	   while (cur != null){
+		   if (cur.left == null){
+			   System.out.print(cur.val + " ");
+			   cur = cur.right;
+		   }
+		   else {
+			   TreeNode pre = cur.left;
+			   while (pre.right != null && pre.right != cur){
+				   pre = pre.right;
+			   }
+			   
+			   if (pre.right == null){
+				   pre.right = cur;
+				   cur = cur.left;
+			   }
+			   else {
+				   pre.right = null;
+				   System.out.print(cur.val + " ");
+				   cur = cur.right;
+			   }
+		   }
+	   }
+   }
 }
