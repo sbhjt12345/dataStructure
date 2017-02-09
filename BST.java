@@ -11,6 +11,47 @@ public class BST {
    
    TreeNode root;
    
+   public void insert(int key){
+	   root = insert(root,key);
+   }
+   
+   public TreeNode insert(TreeNode root, int val){
+	   if (root==null) {
+		   root = new TreeNode(val);
+		   return root;
+	   }
+	   if (root.val<val) root.right = insert(root.right,val);
+	   if (root.val>val) root.left = insert(root.left,val);
+	   return root;
+	   
+   }
+   
+   /**
+    * LCA in a non BST binary tree
+    * 
+    * below commented is a stupid way to accomplish
+    * **/
+   
+   public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+       // search left tree for p 
+       if (root==null || root==p || root==q) return root;
+       boolean leftp = search(root.left,p);
+       boolean rightq = search(root.right,q);
+       if (leftp^rightq) {
+           if (leftp){
+               return lowestCommonAncestor(root.left,p,q);
+           }
+           return lowestCommonAncestor(root.right,p,q);
+       }
+       else return root;
+   }
+   
+   public boolean search(TreeNode root, TreeNode node){
+       if (root==null) return false;
+       if (root==node) return true;
+       return search(root.left,node) || search(root.right,node);
+   }
+   
    public TreeNode LCA(TreeNode root, int v1, int v2){
 	   // if v1 smaller than root v2 bigger than root then return root
 	   // if both bigger then search right, else search left;
@@ -62,5 +103,53 @@ public class BST {
 			   }
 		   }
 	   }
+   }
+   
+   /**
+    * Add all greater values to every node in a given BST
+    *
+    * idea : 
+    * right subtree all greater than root, so get sum of right tree( while doing the recursion), change the val of root
+    * then recursion on left
+    * 
+    * **/
+   
+   public void modifyBST(TreeNode root){
+	   visit(root,0);
+   }
+   
+   public int visit(TreeNode root, int sum){
+	   if (root==null) return sum;
+	   root.val = root.val + visit(root.right,sum);
+	   return visit(root.left,root.val);
+   }
+   
+   /************************************/
+   
+   /**
+    * Remove nodes in a BST outside a given range
+    * **/
+   
+   public TreeNode removeRange(TreeNode root,int low, int high){
+	   if (root==null) return root;
+	   if (root.val<low) return removeRange(root.right,low,high);
+	   if (root.val>high) return removeRange(root.left,low,high);
+	   root.left = removeRange(root.left,low,high);
+	   root.right = removeRange(root.right,low,high);
+	   return root;
+   }
+   
+   /*********************/
+   
+   
+   
+   
+   public static void main(String[] args){
+	   BST eg = new BST();
+	   eg.insert(6);eg.insert(13);eg.insert(14);eg.insert(-8);eg.insert(-13);
+	   eg.insert(15);eg.insert(7);
+	   TreeNode res = eg.removeRange(eg.root,-10,13);
+	   eg.morrisTraversal(res);
+	   
    }
 }
