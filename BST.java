@@ -141,6 +141,48 @@ public class BST {
    
    /*********************/
    
+   /**
+    * Largest bst in binary tree
+    * 
+    * **/
+   class minMax{
+	   int min,max;
+	   boolean isBST;
+	   int size;
+	   minMax(){
+		   min = Integer.MAX_VALUE;
+		   max = Integer.MIN_VALUE;
+		   isBST = true;
+		   size = 0;
+	   }
+   }
+   
+   public minMax largest(TreeNode root){
+	   if (root==null) return new minMax();
+	   // why we are using postorder(left->right->root)? cuz we need to get to leaf first and gradually get up
+	   // we want to count if subtree is BST and deliver the info to root, so needs to start from bottom
+	   minMax leftMM = largest(root.left);
+	   minMax rightMM = largest(root.right);
+	   
+	   if (leftMM.isBST==false || rightMM.isBST==false || (leftMM.max>=root.val || rightMM.min<=root.val)){
+		   minMax res = new minMax();
+		   res.size = Math.max(leftMM.size, rightMM.size);
+		   return res;
+	   }
+	   minMax res = new minMax();
+	   res.min = root.left==null?root.val:leftMM.min;
+	   res.max = root.right==null?root.val:rightMM.max;
+	   res.isBST = true;
+	   res.size = 1+leftMM.size+rightMM.size;
+	   return res;
+	   
+   }
+   public int largestBST(TreeNode root){
+	   return largest(root).size;
+   }
+   
+   
+   
    
    
    
